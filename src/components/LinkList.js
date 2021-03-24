@@ -77,7 +77,7 @@ const NEW_VOTES_SUBSCRIPTION = gql`
 
 const getQueryVariables = (isNewPage, page) => {
     const skip = isNewPage ? (page - 1) * LINKS_PER_PAGE : 0;
-    const take = isNewPage ? LINKS_PER_PAGE : 100;
+    const take = isNewPage ? LINKS_PER_PAGE : 10;
     const orderBy = { createdAt: 'desc' };
     return { take, skip, orderBy };
 };
