@@ -9,6 +9,17 @@ const CREATE_LINK_MUTATION = gql`
             id
             url
             description
+            createdAt
+            postedBy {
+                id
+                name
+            }
+            votes {
+                id
+                user {
+                    id
+                }
+            }
         }
     }
 `
@@ -25,20 +36,31 @@ const CreateLink = () => {
             description: formState.description,
             url: formState.url
         },
-        onCompleted: () => history.push('/'),
-        update: (cache, { data: { post } }) => {
-            const data = cache.readQuery({
-                query: FEED_QUERY,
-            });
+        onCompleted: () => {
+            history.push('/')
+        },
+        update: (cache, mutationResult) => {
+            // const post = mutationResult.data.post;
+            // const data = cache.readQuery({
+            //     query: FEED_QUERY,
+            // });
+            
+            // cache.writeQuery({
+            //     query: FEED_QUERY,
+            //     data: {
+            //         feed: {
+            //             __typename: data.feed.__typename,
+            //             count: data.feed.count + 1,
+            //             links: [...data.feed.links, post],
+            //         }
+            //     }
+            // });
 
-            cache.writeQuery({
-                query: FEED_QUERY,
-                data: {
-                    feed: {
-                        links: [post, ...data.feed.links]
-                    }
-                }
-            });
+            //remove all root query feeds from cache. This will remove all the the search queries as well
+            cache.evict({ 
+                id: "ROOT_QUERY", 
+                field: "feed"
+              })
         }
     })
 
